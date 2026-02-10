@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: rubberedge-backend
+    env: python
+    plan: free
+    buildCommand: "pip install -e . && python manage.py collectstatic --noinput && python manage.py migrate"
+    startCommand: "daphne -b 0.0.0.0 -p $PORT rubber_farm_api.asgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        fromService:
+          type: web
+          name: rubberedge-backend
+          property: host
+
+databases:
+  - name: rubberedge-db
+    plan: free
+    databaseName: rubberedge
+    user: rubberedge
+
+  - name: rubberedge-redis
+    plan: free
+    ipAllowList: []

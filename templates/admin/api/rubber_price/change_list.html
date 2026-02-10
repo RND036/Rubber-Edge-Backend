@@ -1,0 +1,39 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+    <ul class="object-tools">
+        {{ block.super }}
+        
+        <li>
+            <a href="{% url 'admin:trigger_scrape' %}" 
+               style="background-color: #3498db !important; 
+                      color: white !important; 
+                      padding: 10px 15px !important; 
+                      border-radius: 4px !important;
+                      text-decoration: none !important;
+                      display: inline-block !important;
+                      font-weight: bold !important;">
+                🔄 Scrape CRTA Now
+            </a>
+        </li>
+        
+        <li>
+            <a href="{% url 'admin:bulk_price_entry' %}" 
+               style="background-color: #27ae60 !important; 
+                      color: white !important; 
+                      padding: 10px 15px !important; 
+                      border-radius: 4px !important;
+                      text-decoration: none !important;
+                      display: inline-block !important;
+                      font-weight: bold !important;">
+                ➕ Manual Price Entry
+            </a>
+        </li>
+    </ul>
+    
+    <style>
+        .object-tools li a:hover {
+            opacity: 0.8;
+        }
+    </style>
+{% endblock %}

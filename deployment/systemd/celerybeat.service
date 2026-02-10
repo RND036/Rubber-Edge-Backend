@@ -1,0 +1,23 @@
+[Unit]
+Description=Celery Beat Scheduler for RubberEdge
+After=network.target redis.service
+
+[Service]
+Type=forking
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/rubberedge/backend
+Environment="PATH=/home/ubuntu/rubberedge/backend/venv/bin"
+ExecStart=/home/ubuntu/rubberedge/backend/venv/bin/celery -A rubber_farm_api beat \
+          --loglevel=info \
+          --logfile=/var/log/celery/beat.log \
+          --pidfile=/var/run/celery/beat.pid \
+          --detach
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=on-failure
+RestartSec=10s
+KillMode=mixed
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

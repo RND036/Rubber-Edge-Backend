@@ -1,0 +1,498 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Trigger CRTA Scraping{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <style>
+        body {
+            background: #1a1a1a !important;
+        }
+        
+        .scrape-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0;
+        }
+        
+        .scrape-card {
+            background: #ffffff !important;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .scrape-card h1 {
+            margin-top: 0;
+            color: #2c3e50 !important;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+        
+        .info-box {
+            background: #e8f5e9 !important;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #27ae60;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: #27ae60 !important;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .info-box ul {
+            line-height: 2;
+            color: #2c3e50 !important;
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .info-box li {
+            color: #2c3e50 !important;
+            font-size: 15px;
+        }
+        
+        .note-box {
+            background: #fff3cd !important;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #f39c12;
+            color: #856404 !important;
+            font-size: 15px;
+        }
+        
+        .note-box strong {
+            color: #856404 !important;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn-primary {
+            flex: 1;
+            background: #27ae60 !important;
+            color: white !important;
+            padding: 16px 30px;
+            font-size: 17px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .btn-primary:hover {
+            background: #229954 !important;
+        }
+        
+        .btn-primary:disabled {
+            background: #95a5a6 !important;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            flex: 1;
+            text-align: center;
+            padding: 16px 30px;
+            background: #95a5a6 !important;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d !important;
+            color: white !important;
+        }
+        
+        .progress-section {
+            display: none;
+            background: #e3f2fd !important;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #2196f3;
+        }
+        
+        .progress-section.active {
+            display: block;
+        }
+        
+        .progress-section h3 {
+            margin-top: 0;
+            color: #1976d2 !important;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .progress-steps {
+            margin: 15px 0;
+        }
+        
+        .progress-step {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            color: #666 !important;
+            font-size: 15px;
+        }
+        
+        .progress-step.active {
+            color: #2196f3 !important;
+            font-weight: bold;
+        }
+        
+        .progress-step.completed {
+            color: #27ae60 !important;
+        }
+        
+        .progress-step-icon {
+            margin-right: 10px;
+            font-size: 18px;
+            width: 25px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2196f3;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-box {
+            display: none;
+            background: #d4edda !important;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+        
+        .success-box.active {
+            display: block;
+        }
+        
+        .success-box h3 {
+            margin-top: 0;
+            color: #155724 !important;
+            font-size: 20px;
+        }
+        
+        .success-box p {
+            color: #155724 !important;
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        
+        .error-box {
+            display: none;
+            background: #f8d7da !important;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .error-box.active {
+            display: block;
+        }
+        
+        .error-box h3 {
+            margin-top: 0;
+            color: #721c24 !important;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .error-box p {
+            color: #721c24 !important;
+            margin: 8px 0;
+            font-size: 15px;
+        }
+        
+        .error-details {
+            background: #fff !important;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border: 1px solid #dc3545;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .error-details pre {
+            margin: 0;
+            color: #721c24 !important;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .logs-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .logs-section h3 {
+            color: #2c3e50 !important;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .logs-section a {
+            color: #3498db !important;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        
+        .logs-section a:hover {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="scrape-container">
+    <div class="scrape-card">
+        <h1>🔄 Trigger CRTA Price Scraping</h1>
+        
+        <div id="infoBox" class="info-box">
+            <h3>📋 What will happen:</h3>
+            <ul>
+                <li>Scrape latest prices from CRTA website</li>
+                <li>Extract rubber grades using OCR technology</li>
+                <li>Update database with new prices</li>
+                <li>Calculate price change percentages</li>
+                <li>Broadcast updates to connected clients</li>
+            </ul>
+        </div>
+
+        <div class="note-box">
+            <strong>⏱️ Note:</strong> Scraping takes 10-15 seconds to complete.
+        </div>
+
+        <!-- Progress Section -->
+        <div id="progressSection" class="progress-section">
+            <h3>🔄 Scraping in Progress...</h3>
+            <div class="progress-steps">
+                <div id="step1" class="progress-step">
+                    <span class="progress-step-icon">⏳</span>
+                    <span>Connecting to CRTA website...</span>
+                </div>
+                <div id="step2" class="progress-step">
+                    <span class="progress-step-icon">⏳</span>
+                    <span>Downloading price image...</span>
+                </div>
+                <div id="step3" class="progress-step">
+                    <span class="progress-step-icon">⏳</span>
+                    <span>Extracting prices using OCR...</span>
+                </div>
+                <div id="step4" class="progress-step">
+                    <span class="progress-step-icon">⏳</span>
+                    <span>Updating database...</span>
+                </div>
+                <div id="step5" class="progress-step">
+                    <span class="progress-step-icon">⏳</span>
+                    <span>Broadcasting updates...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Section -->
+        <div id="successBox" class="success-box">
+            <h3>✅ Scraping Completed Successfully!</h3>
+            <p id="successMessage">Successfully scraped and updated rubber prices.</p>
+            <p><strong>Time taken:</strong> <span id="timeTaken">-</span> seconds</p>
+        </div>
+
+        <!-- Error Section -->
+        <div id="errorBox" class="error-box">
+            <h3>❌ Scraping Failed</h3>
+            <p><strong>Error:</strong> <span id="errorMessage">An error occurred during scraping.</span></p>
+            <div class="error-details">
+                <strong>Technical Details:</strong>
+                <pre id="errorDetails">No details available</pre>
+            </div>
+        </div>
+
+        <form id="scrapeForm" method="post">
+            {% csrf_token %}
+            
+            <div class="button-container">
+                <button type="submit" id="startButton" class="btn-primary">
+                    🚀 Start Scraping Now
+                </button>
+                
+                <a href="{% url 'admin:api_rubberprice_changelist' %}" class="btn-secondary">
+                    ❌ Cancel
+                </a>
+            </div>
+        </form>
+
+        <div class="logs-section">
+            <h3>📊 Recent Scraping Logs</h3>
+            <a href="{% url 'admin:api_scrapinglog_changelist' %}">
+                → View all scraping logs
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('scrapeForm');
+    const startButton = document.getElementById('startButton');
+    const infoBox = document.getElementById('infoBox');
+    const progressSection = document.getElementById('progressSection');
+    const successBox = document.getElementById('successBox');
+    const errorBox = document.getElementById('errorBox');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Hide all status boxes
+        infoBox.style.display = 'none';
+        progressSection.classList.add('active');
+        successBox.classList.remove('active');
+        errorBox.classList.remove('active');
+        
+        // Disable button
+        startButton.disabled = true;
+        startButton.textContent = '⏳ Scraping in progress...';
+        
+        // Start time
+        const startTime = Date.now();
+        
+        // Simulate progress steps
+        const progressInterval = simulateProgress();
+        
+        // Submit form via AJAX
+        const formData = new FormData(form);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const timeTaken = ((Date.now() - startTime) / 1000).toFixed(1);
+            
+            // Hide progress
+            progressSection.classList.remove('active');
+            
+            if (data.success) {
+                // Show success
+                successBox.classList.add('active');
+                document.getElementById('timeTaken').textContent = data.time_taken || timeTaken;
+                document.getElementById('successMessage').textContent = 
+                    `Successfully scraped ${data.grades_count || 0} rubber grades.`;
+                
+                // Re-enable button
+                startButton.disabled = false;
+                startButton.textContent = '✅ Scraping Complete';
+                
+                // Redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = "{% url 'admin:api_rubberprice_changelist' %}";
+                }, 3000);
+            } else {
+                // Show error with details
+                errorBox.classList.add('active');
+                document.getElementById('errorMessage').textContent = 
+                    data.error || 'Unknown error occurred';
+                document.getElementById('errorDetails').textContent = 
+                    data.details || data.error || 'No technical details available';
+                
+                // Re-enable button
+                startButton.disabled = false;
+                startButton.textContent = '🔄 Retry Scraping';
+            }
+        })
+        .catch(error => {
+            // Hide progress, show error
+            progressSection.classList.remove('active');
+            errorBox.classList.add('active');
+            
+            document.getElementById('errorMessage').textContent = 
+                'Network error: Unable to connect to server';
+            
+            document.getElementById('errorDetails').textContent = 
+                `Error: ${error.message}\n\n` +
+                'Please check:\n' +
+                '1. Django server is running (http://localhost:8000)\n' +
+                '2. Celery worker is running:\n' +
+                '   celery -A rubber_farm_api worker -l info\n\n' +
+                '3. Redis is running:\n' +
+                '   redis-cli ping\n\n' +
+                '4. Check terminal logs for more details';
+            
+            // Re-enable button
+            startButton.disabled = false;
+            startButton.textContent = '🔄 Retry Scraping';
+        });
+    });
+    
+    function simulateProgress() {
+        const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+        let currentStep = 0;
+        
+        const interval = setInterval(() => {
+            if (currentStep > 0) {
+                const prevStep = document.getElementById(steps[currentStep - 1]);
+                if (prevStep) {
+                    prevStep.classList.remove('active');
+                    prevStep.classList.add('completed');
+                    prevStep.querySelector('.progress-step-icon').textContent = '✅';
+                }
+            }
+            
+            if (currentStep < steps.length) {
+                const step = document.getElementById(steps[currentStep]);
+                if (step) {
+                    step.classList.add('active');
+                    step.querySelector('.progress-step-icon').innerHTML = '<div class="spinner"></div>';
+                }
+                currentStep++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 2000);
+        
+        return interval;
+    }
+});
+</script>
+{% endblock %}

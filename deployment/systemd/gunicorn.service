@@ -1,0 +1,25 @@
+[Unit]
+Description=Gunicorn daemon for RubberEdge Django WSGI
+After=network.target
+
+[Service]
+Type=notify
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/rubberedge/backend
+Environment="PATH=/home/ubuntu/rubberedge/backend/venv/bin"
+ExecStart=/home/ubuntu/rubberedge/backend/venv/bin/gunicorn \
+          --workers 3 \
+          --bind unix:/home/ubuntu/rubberedge/backend/gunicorn.sock \
+          --timeout 120 \
+          --access-logfile /var/log/gunicorn/access.log \
+          --error-logfile /var/log/gunicorn/error.log \
+          --log-level info \
+          rubber_farm_api.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

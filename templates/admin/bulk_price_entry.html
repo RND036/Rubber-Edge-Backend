@@ -1,0 +1,297 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Bulk Price Entry{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <style>
+        body {
+            background: #1a1a1a !important;
+        }
+        
+        .price-entry-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .price-card {
+            background: #ffffff !important;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .price-card h1 {
+            color: #2c3e50 !important;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .auction-info {
+            background: #f0f8ff !important;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 2px solid #3498db;
+        }
+        
+        .auction-info h2 {
+            margin-top: 0;
+            color: #2c3e50 !important;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .auction-info label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50 !important;
+            font-size: 15px;
+        }
+        
+        .auction-info input[type="date"] {
+            padding: 10px;
+            font-size: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 220px;
+            background: white !important;
+            color: #000 !important;
+        }
+        
+        .tip {
+            color: #666 !important;
+            margin: 15px 0 0 0;
+            font-size: 14px;
+        }
+        
+        .price-section h2 {
+            color: #2c3e50 !important;
+            margin: 30px 0 20px 0;
+            font-size: 22px;
+        }
+        
+        .grade-fieldset {
+            margin-bottom: 25px;
+            padding: 25px;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            background: #f9fff9 !important;
+        }
+        
+        .grade-fieldset legend {
+            font-weight: bold;
+            color: #27ae60 !important;
+            padding: 5px 15px;
+            font-size: 17px;
+            background: #e8f5e9;
+            border-radius: 5px;
+        }
+        
+        .price-row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .price-row label {
+            display: inline-block;
+            width: 200px;
+            font-weight: 600;
+            color: #2c3e50 !important;
+            font-size: 15px;
+        }
+        
+        .price-row input {
+            padding: 10px;
+            width: 160px;
+            font-size: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: white !important;
+            color: #000 !important;
+        }
+        
+        .price-row input:focus {
+            border-color: #27ae60;
+            outline: none;
+        }
+        
+        .price-row span {
+            color: #666 !important;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        
+        .button-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .btn-save {
+            background: #27ae60 !important;
+            color: white !important;
+            padding: 14px 35px;
+            font-size: 17px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .btn-save:hover {
+            background: #229954 !important;
+        }
+        
+        .btn-cancel {
+            margin-left: 15px;
+            padding: 14px 35px;
+            background: #95a5a6 !important;
+            color: white !important;
+            text-decoration: none;
+            border-radius: 6px;
+            display: inline-block;
+            font-size: 17px;
+            font-weight: bold;
+        }
+        
+        .btn-cancel:hover {
+            background: #7f8c8d !important;
+            color: white !important;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="price-entry-container">
+    <div class="price-card">
+        <h1>📊 CRTA Rubber Price - Manual Entry</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="auction-info">
+                <h2>Auction Information</h2>
+                <label for="auction_date">📅 Date of Auction:</label>
+                <input type="date" id="auction_date" name="auction_date" value="{{ today }}" required>
+                <p class="tip">
+                    💡 <strong>Tip:</strong> Leave prices blank or enter 0 for unquoted (Unq) grades
+                </p>
+            </div>
+
+            <div class="price-section">
+                <h2>💰 Rubber Grades & Prices</h2>
+
+                <fieldset class="grade-fieldset">
+                    <legend>LATEX CREPE</legend>
+                    <div class="price-row">
+                        <label>LATEX CREPE 1X:</label>
+                        <input type="number" name="price_LATEX CREPE 1X" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>LATEX CREPE 1:</label>
+                        <input type="number" name="price_LATEX CREPE 1" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>LATEX CREPE 2:</label>
+                        <input type="number" name="price_LATEX CREPE 2" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>LATEX CREPE 3:</label>
+                        <input type="number" name="price_LATEX CREPE 3" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>LATEX CREPE 4:</label>
+                        <input type="number" name="price_LATEX CREPE 4" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                </fieldset>
+
+                <fieldset class="grade-fieldset">
+                    <legend>SC.CR. (Sole Crepe)</legend>
+                    <div class="price-row">
+                        <label>SC.CR. 1X(BR):</label>
+                        <input type="number" name="price_SC.CR. 1X(BR)" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>SC.CR. 2X(BR):</label>
+                        <input type="number" name="price_SC.CR. 2X(BR)" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>SC.CR. 3X(BR):</label>
+                        <input type="number" name="price_SC.CR. 3X(BR)" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>SC.CR. 4X(BR):</label>
+                        <input type="number" name="price_SC.CR. 4X(BR)" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                </fieldset>
+
+                <fieldset class="grade-fieldset">
+                    <legend>Other Crepe Grades</legend>
+                    <div class="price-row">
+                        <label>SKIM CREPE:</label>
+                        <input type="number" name="price_SKIM CREPE" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>FLAT BARK:</label>
+                        <input type="number" name="price_FLAT BARK" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                </fieldset>
+
+                <fieldset class="grade-fieldset">
+                    <legend>RSS (Ribbed Smoked Sheet)</legend>
+                    <div class="price-row">
+                        <label>RSS1:</label>
+                        <input type="number" name="price_RSS1" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>RSS2:</label>
+                        <input type="number" name="price_RSS2" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>RSS3:</label>
+                        <input type="number" name="price_RSS3" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>RSS4:</label>
+                        <input type="number" name="price_RSS4" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                    <div class="price-row">
+                        <label>RSS5:</label>
+                        <input type="number" name="price_RSS5" step="0.01" placeholder="0.00">
+                        <span>LKR/kg</span>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="button-section">
+                <button type="submit" class="btn-save">
+                    💾 Save All Prices
+                </button>
+                <a href="{% url 'admin:api_rubberprice_changelist' %}" class="btn-cancel">
+                    ❌ Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

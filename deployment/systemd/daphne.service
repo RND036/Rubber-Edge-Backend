@@ -1,0 +1,24 @@
+[Unit]
+Description=Daphne daemon for RubberEdge Django ASGI (WebSockets)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/rubberedge/backend
+Environment="PATH=/home/ubuntu/rubberedge/backend/venv/bin"
+ExecStart=/home/ubuntu/rubberedge/backend/venv/bin/daphne \
+          -u /home/ubuntu/rubberedge/backend/daphne.sock \
+          --access-log /var/log/daphne/access.log \
+          --verbosity 2 \
+          rubber_farm_api.asgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+RestartSec=5s
+KillMode=mixed
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
